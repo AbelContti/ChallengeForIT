@@ -1,4 +1,4 @@
-export const tasks = [ 
+export let tasks = [ 
     { 
         id: 1, 
         title: "pasear perro", 
@@ -31,3 +31,23 @@ export const tasks = [
         completedAt: null
     }
 ];
+
+export function getTask(id) {
+    return tasks.find( t => t.id === Number(id) );
+}
+
+export function removeTask(id) {
+    tasks = tasks.filter( t => t.id !== Number(id) );
+}
+
+export function addTask(task) {
+    tasks.push(task);
+}
+
+export function editTask(oldTask, newTask) {
+    oldTask.title = newTask.title || oldTask.title;
+    oldTask.description = newTask.description || oldTask.description;
+    
+    oldTask.completed = newTask.completed === false ? newTask.completed :  ( newTask.completed || oldTask.completed);
+    oldTask.completedAt = newTask.completedAt === null ? newTask.completedAt :  ( newTask.completedAt || oldTask.completedAt);
+}
