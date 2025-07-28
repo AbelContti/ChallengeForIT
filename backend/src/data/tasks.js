@@ -1,4 +1,7 @@
-export let tasks = [ 
+import { ConflictError } from "../errors/ConflictError.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
+
+let tasks = [ 
     { 
         id: 1, 
         title: "pasear perro", 
@@ -32,22 +35,52 @@ export let tasks = [
     }
 ];
 
+export function getTasks() {
+    if(tasks.length === 0) {
+        throw new NotFoundError('Error obteniendo tareas: no hay tareas para mostrar');
+    }
+    
+    return tasks;
+}
+
 export function getTask(id) {
-    return tasks.find( t => t.id === Number(id) );
+    const task = tasks.find( t => t.id === Number(id) );
+    return task;
 }
 
 export function removeTask(id) {
+    const task = getTask(id);
+
+    if(!task) {
+        throw new NotFoundError('Error eliminando tarea: ID no encontrado');
+    }
+    
     tasks = tasks.filter( t => t.id !== Number(id) );
 }
 
 export function addTask(task) {
+    if(!task.id) {
+        throw new ConflictError('Error creando tarea: ID no incluido o invalido');
+    }
+    
+    const existId = getTask(task.id);
+
+    if(existId) {
+        throw new ConflictError('Error creando tarea: ID repetido');
+    }
+    
     tasks.push(task);
 }
 
-export function editTask(oldTask, newTask) {
-    oldTask.title = newTask.title || oldTask.title;
-    oldTask.description = newTask.description || oldTask.description;
+export function editTask(id, task) {
+    const oldTask = getTask(id);
+
+    if(!oldTask) {
+        throw new NotFoundError('Error modificando tarea: ID no encontrado');
+    }
     
-    oldTask.completed = newTask.completed === false ? newTask.completed :  ( newTask.completed || oldTask.completed);
-    oldTask.completedAt = newTask.completedAt === null ? newTask.completedAt :  ( newTask.completedAt || oldTask.completedAt);
+    oldTask.title = task.title || oldTask.title;
+    oldTask.description = task.description || oldTask.description;
+    oldTask.completed = task.completed === false ? task.completed :  ( task.completed || oldTask.completed);
+    oldTask.completedAt = task.completedAt === null ? task.completedAt :  ( task.completedAt || oldTask.completedAt);
 }

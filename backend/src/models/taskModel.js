@@ -1,29 +1,16 @@
-import { tasks, getTask, addTask, removeTask, editTask } from "../data/tasks.js";
+import { getTasks, addTask, removeTask, editTask } from "../data/tasks.js";
 
 export function getAllTasks() {
     try {
-        return tasks;
+        return getTasks();
     } catch (error) {
         throw error;
     }
 }
 
-// export function getTaskById(id) {
-//     try {
-//         const task = tasks.find( t => t.id === Number(id) );
-//         return task;
-//     } catch (error) {
-//         throw error;
-//     }
-// }
-
 export function deleteTask(id) {
     try {
-        const task = getTask(id);
-        
-        if(task) {
-            removeTask(id);
-        }
+        removeTask(id);
     } catch (error) {
         throw error;
     }
@@ -37,12 +24,9 @@ export function createTask(task) {
     }
 }
 
-export function updateTask(id, newTask) {
+export function updateTask(id, task) {
     try {
-        const oldTask = getTask(id);
-        if(oldTask) {
-            editTask(oldTask, newTask);
-        }
+        editTask(id, task);
     } catch (error) {
         throw error;
     }

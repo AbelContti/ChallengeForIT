@@ -12,6 +12,6 @@ export function save(task) {
     return createTask(task);
 }
 
-export function edit(id, newTask) {
-    return updateTask(id, newTask);
+export function edit(id, task) {
+    return updateTask(id, task);
 }
